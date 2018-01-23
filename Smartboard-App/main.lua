@@ -21,5 +21,10 @@ local HomeButtons = {
         label = "Edit";
     }
 }
-
+Interface:Destroy()
 Interface.CreateHomeButtons(HomeButtons)
+Changeeee
+--Quick edit notice
+
+
+yikesss
