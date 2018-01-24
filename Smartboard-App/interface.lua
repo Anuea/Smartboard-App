@@ -21,27 +21,32 @@ local TemplateStyle = {
     strokeWidth = 4
 }
 TemplateStyle.__index = TemplateStyle
-local TestTable = {Hello=1}
-TestTable.__index = TestTable
 
 local widget = require("widget")
 function API.CreateHomeButtons(TableSent)
     local function CreateNewStyles()
-        local Styles = {}
-        for i,v in pairs(TableSent) do
-            local CurrentStyle = setmetatable({},TemplateStyle)
-            Styles[i] = CurrentStyle
-        end
-        for i,v in pairs(Styles) do
-            local meta = getmetatable(v)
-            print(Styles[i])
-            for prop,val in pairs(v) do
-                if meta[prop] then
-                    meta[prop] = val
+        local MetaStyles = {}
+        local function ApplyMetaStyle(ButtonTable,MetaStyle,ButtonName)
+            if ButtonTable[ButtonName] then
+                for Prop,Val in pairs(ButtonTable[ButtonName]) do
+                    if MetaStyle[Prop] then
+                        MetaStyle[Prop] = Val
+                    end
                 end
             end
         end
-        return Styles
+        for ButtonName,ButtonData in pairs(TableSent) do
+            local NewMetaStyle = setmetatable({},TemplateStyle)
+            MetaStyles[ButtonName] = NewMetaStyle
+        end
+        for ButtonName,ButtonData in pairs(TableSent) do
+            local MetaStyle = getmetatable(MetaStyles[ButtonName])
+            if MetaStyles[ButtonName] then
+                MetaStyles["label"] = ButtonName
+            end
+            --ApplyMetaStyle(TableSent,MetaStyle,ButtonName)
+        end
+        return MetaStyles
     end
 
     local Int = 50
